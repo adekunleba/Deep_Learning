@@ -1,7 +1,8 @@
+#%load assignment1.py
+
 import numpy as np
 import scipy.io as sio
 import matplotlib.pyplot as plt
-
 
 def learn_perceptron(neg_examples_nobias, pos_examples_nobias, w_init, w_gen_feas):
     ''' Learns the weights of a perceptron and displays the results.
@@ -86,7 +87,6 @@ def learn_perceptron(neg_examples_nobias, pos_examples_nobias, w_init, w_gen_fea
         # input('<Press enter to continue...',)
     return w
 
-
 # WRITE THE CODE TO COMPLETE THIS FUNCTION
 def update_weights(neg_examples, pos_examples, w_current):
     ''' Updates the weights of the perceptron for incorrectly classified points
@@ -108,18 +108,23 @@ def update_weights(neg_examples, pos_examples, w_current):
     w = w_current
     for i in range(neg_examples.shape[0]):
         this_case = neg_examples[i]
-        activation = this_case.dot(w)
+        activation = this_case.dot(w)[0]
         if (activation >= 0):
-            # YOUR CODE HERE
+            #WRITE YOUR CODE HERE 
+            learning_rate = 1
+            target = 0
+            w = np.add(w , (learning_rate * ((target - activation) * this_case)).reshape(-1, 1))
 
     for i in range(pos_examples.shape[0]):
         this_case = pos_examples[i]
-        activation = this_case.dot(w)
+        activation = this_case.dot(w)[0]
         if (activation < 0):
-            # YOUR CODE HERE
+            #WRITE YOUR CODE HERE
+            learning_rate = 1
+            target = 1
+            w = np.add(w , (learning_rate * ((target - activation) * this_case)).reshape(-1, 1))
 
     return w
-
 
 def eval_perceptron(neg_examples, pos_examples, w):
     ''' Evaluates the perceptron using a given weight vector.
@@ -147,18 +152,17 @@ def eval_perceptron(neg_examples, pos_examples, w):
 
     for i in range(num_neg_examples):
         x = neg_examples[i]
-        activation = x.dot(w)
+        activation = x.dot(w)[0]
         if activation >= 0:
             mistakes0.append(i)
 
     for i in range(num_pos_examples):
         x = pos_examples[i]
-        activation = x.dot(w)
+        activation = x.dot(w)[0]
         if activation < 0:
             mistakes1.append(i)
 
     return [mistakes0, mistakes1]
-
 
 def plot_perceptron(neg_examples, pos_examples, mistakes0, mistakes1,
                     num_err_history, w, w_dist_history):
@@ -279,4 +283,3 @@ else:
 
 ## Launch learning
 learn_perceptron(neg_examples_nobias, pos_examples_nobias, w_init, w_gen_feas)
-
